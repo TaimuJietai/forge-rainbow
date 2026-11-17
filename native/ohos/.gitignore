@@ -1,0 +1,29 @@
+# Dependencies
+/node_modules
+/oh_modules
+
+# Local SDK / machine config
+/local.properties
+
+# IDE
+/.idea
+.DS_Store
+
+# Build
+**/build
+/.hvigor
+.cxx
+*.hap
+*.hsp
+*.app
+
+# Tooling
+/.clangd
+/.clang-format
+/.clang-tidy
+**/.test
+/.appanalyzer
+/.preview
+
+# Logs
+*.log

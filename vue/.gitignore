@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Test / coverage
+coverage/
+
+# Vite
+.vite/
+
+# Logs
+logs/
+
+# Local env
+*.local
+
+# Editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
