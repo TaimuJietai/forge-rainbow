@@ -1,8 +1,9 @@
 {
-  "description": "项目配置文件",
+  "description": "彩虹锻造 微信小程序版",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "setting": {
+    "urlCheck": false,
     "useCompilerPlugins": [
       "typescript"
     ],
@@ -14,13 +15,13 @@
     "coverView": false,
     "postcss": false,
     "minified": false,
-    "enhance": false,
+    "enhance": true,
     "showShadowRootInWxmlPanel": false,
     "packNpmRelationList": [],
     "ignoreUploadUnusedFiles": true,
     "compileHotReLoad": false,
-    "skylineRenderEnable": true,
-    "es6": false,
+    "skylineRenderEnable": false,
+    "es6": true,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
@@ -41,10 +42,11 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "libVersion": "trial",
+  "libVersion": "3.4.10",
   "packOptions": {
     "ignore": [],
     "include": []
   },
-  "appid": "wx7e3bf9ce5eaffe0a"
+  "appid": "wx2ed5a8f587468a64",
+  "projectname": "forge-rainbow"
 }

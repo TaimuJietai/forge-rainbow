@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.jpush.android"
+    namespace = "com.forge.rainbow2"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.jpush.android"
+        applicationId = "com.forge.rainbow2"
         minSdk = 23
         targetSdk = 36
         versionCode = 1
@@ -30,3 +30,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+dependencies {
+    implementation(libs.androidx.webkit)
+}
+

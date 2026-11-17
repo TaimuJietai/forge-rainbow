@@ -1,27 +1,9 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
-    </view>
-  </view>
-</scroll-view>
+<block wx:if="{{src}}">
+  <web-view src="{{src}}" bindload="onWebLoad" binderror="onWebError"></web-view>
+</block>
+<view wx:else class="fallback">
+  <text class="title">无法加载 H5</text>
+  <text class="hint">目标地址：https://dv.phb.plus/</text>
+  <text class="code" wx:if="{{errorMsg}}">{{errorMsg}}</text>
+  <text class="hint">开发者工具请勾选「不校验合法域名、web-view（业务域名）」；正式环境需在公众平台配置业务域名 dv.phb.plus。</text>
+</view>

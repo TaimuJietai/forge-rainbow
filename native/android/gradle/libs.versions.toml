@@ -1,5 +1,9 @@
 [versions]
 agp = "9.3.3"
+webkit = "1.14.0"
+
+[libraries]
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
