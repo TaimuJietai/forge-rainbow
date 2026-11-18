@@ -6,12 +6,12 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Android"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivity"
+            android:name="com.forge.rainbow2.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Android"
             android:configChanges="orientation|screenSize|keyboardHidden">

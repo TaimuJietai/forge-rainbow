@@ -14,8 +14,8 @@ android {
         applicationId = "com.forge.rainbow2"
         minSdk = 23
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.0.3"
     }
 
     buildTypes {
@@ -34,4 +34,3 @@ android {
 dependencies {
     implementation(libs.androidx.webkit)
 }
-
