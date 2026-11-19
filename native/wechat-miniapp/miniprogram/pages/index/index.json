@@ -1,4 +1,4 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "彩虹锻造"
+  "navigationStyle": "custom",
+  "usingComponents": {}
 }

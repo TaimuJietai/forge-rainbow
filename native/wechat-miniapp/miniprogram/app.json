@@ -1,23 +1,13 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/index/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "彩虹锻造",
-    "navigationBarBackgroundColor": "#F6F7F9",
-    "backgroundColor": "#F6F7F9",
-    "backgroundTextStyle": "light"
+    "navigationBarBackgroundColor": "#ffffff"
   },
   "style": "v2",
-  "lazyCodeLoading": "requiredComponents",
-  "permission": {
-    "scope.userLocation": {
-      "desc": "扫描附近蓝牙体脂秤需要位置权限"
-    },
-    "scope.camera": {
-      "desc": "拍照识别食物与发送对话图片需要相机权限"
-    }
-  }
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
 }

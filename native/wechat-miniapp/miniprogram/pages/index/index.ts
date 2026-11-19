@@ -1,29 +1,20 @@
-const WEB_URL = 'https://dv.phb.plus/'
+const WEB_URL = 'https://dv.phb.plus'
 
 Page({
   data: {
-    src: WEB_URL,
-    failed: false,
-    errorMsg: '',
-  },
-
-  onLoad() {
-    console.log('[webview] open', WEB_URL)
-    this.setData({ src: WEB_URL, failed: false, errorMsg: '' })
+    url: WEB_URL,
+    showLoading: true,
   },
 
   onWebLoad() {
-    console.log('[webview] load ok', this.data.src)
-    this.setData({ failed: false, errorMsg: '' })
+    this.setData({ showLoading: false })
   },
 
-  onWebError(event: WechatMiniprogram.CustomEvent) {
-    const detail = (event?.detail || {}) as Record<string, unknown>
-    console.error('[webview] load error', detail)
-    this.setData({
-      failed: true,
-      src: '',
-      errorMsg: JSON.stringify(detail),
+  onWebError() {
+    this.setData({ showLoading: false })
+    wx.showToast({
+      title: '页面加载失败',
+      icon: 'none',
     })
   },
 })

@@ -1,9 +1,8 @@
 {
-  "description": "彩虹锻造 微信小程序版",
+  "description": "项目配置文件",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "setting": {
-    "urlCheck": false,
     "useCompilerPlugins": [
       "typescript"
     ],
@@ -20,19 +19,17 @@
     "packNpmRelationList": [],
     "ignoreUploadUnusedFiles": true,
     "compileHotReLoad": false,
-    "skylineRenderEnable": false,
+    "skylineRenderEnable": true,
     "es6": true,
-    "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
     "packNpmManually": false,
     "minifyWXSS": true,
-    "minifyWXML": true,
     "localPlugins": false,
     "condition": false,
-    "swc": false,
-    "disableSWC": true,
-    "disableUseStrict": false
+    "compileWorklet": false,
+    "disableUseStrict": false,
+    "minifyWXML": true
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
@@ -42,11 +39,10 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "libVersion": "3.4.10",
+  "libVersion": "trial",
   "packOptions": {
     "ignore": [],
     "include": []
   },
-  "appid": "wx2ed5a8f587468a64",
-  "projectname": "forge-rainbow"
+  "appid": "wx7e3bf9ce5eaffe0a"
 }
