@@ -1,8 +1,9 @@
 # 彩虹 SDK 开发计划
 
 > 状态：规划中  
-> 文件：`docs/plan/彩虹SDK开发计划.md`  
-
+> 创建日期：2026-11-19  
+> 更新日期：2026-11-19  
+> 摘要：纯 JS SDK（Vite → ES5）植入各端 WebView，全局对象 `rainbow`；共用 `configuration/webview.json`（目标页 + 域名白名单）  
 > 目标目录：`sdk/`  
 > 全局对象：`window.rainbow`  
 > 共用配置：`configuration/webview.json`（目标页 URL + 域名白名单）  
@@ -413,4 +414,4 @@ pnpm build     # 输出 dist/rainbow.min.js
 
 ---
 
-*文档版本：2026-11-19 · 对齐「纯 JS SDK + 原生植入 + rainbow 系统名 Demo」；补充 `configuration/webview.json`（目标页与白名单同文件）约定。*
+*更新日期：2026-11-19 · 对齐「纯 JS SDK + 原生植入 + rainbow 系统名 Demo」；补充 `configuration/webview.json`（目标页与白名单同文件）约定。*
