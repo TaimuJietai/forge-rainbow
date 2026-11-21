@@ -2,6 +2,7 @@
   src="{{url}}"
   bindload="onWebLoad"
   binderror="onWebError"
+  bindmessage="onWebMessage"
 />
 
 <cover-view wx:if="{{showLoading}}" class="loading-mask">

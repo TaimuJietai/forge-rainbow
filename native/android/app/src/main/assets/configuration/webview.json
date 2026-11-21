@@ -1,0 +1,7 @@
+{
+  "url": "https://dv.phb.plus/test.html",
+  "allowedHosts": [
+    "dv.phb.plus",
+    "cdn.phb.plus"
+  ]
+}
