@@ -1,21 +1,119 @@
 import { webview } from '@kit.ArkWeb';
+import { util } from '@kit.ArkTS';
+import { common } from '@kit.AbilityKit';
+import { WebViewHostBridge } from '../bridge/WebViewHostBridge';
 
-const WEB_URL: string = 'https://dv.phb.plus/';
 const OVERLAY_FADE_MS: number = 350;
 const LOADING_FADE_MS: number = 250;
+const FALLBACK_URL: string = 'https://dv.phb.plus/';
+const BRIDGE_NAME: string = 'kWHScriptHandlerName';
+
+interface WebViewJsonConfig {
+  url?: string;
+  allowedHosts?: string[];
+}
+
+/** 文档起始注入项（API 因 SDK 版本可能无 webview.ScriptItem 导出，本地声明） */
+interface DocumentStartScriptItem {
+  script: string;
+  scriptRules: string[];
+}
 
 @Entry
 @Component
 struct Index {
   private controller: webview.WebviewController = new webview.WebviewController();
+  private bridge: WebViewHostBridge = new WebViewHostBridge();
   @State webStarted: boolean = false;
   @State showCover: boolean = true;
   @State logoOpacity: number = 1;
   @State loadingOpacity: number = 0;
   @State coverOpacity: number = 1;
   @State buttonOpacity: number = 1;
+  @State homeUrl: string = FALLBACK_URL;
+  private allowedHosts: string[] = ['dv.phb.plus', 'cdn.phb.plus'];
+  private documentStartScripts: Array<DocumentStartScriptItem> = [];
   private didShowLoading: boolean = false;
   private didDismissCover: boolean = false;
+
+  aboutToAppear(): void {
+    this.bridge.bindController(this.controller);
+    this.loadWebViewConfig();
+    this.prepareRainbowInjection();
+  }
+
+  private readRawFileText(path: string): string {
+    try {
+      const context = getContext(this) as common.UIAbilityContext;
+      const data: Uint8Array = context.resourceManager.getRawFileContentSync(path);
+      const decoder = util.TextDecoder.create('utf-8');
+      return decoder.decodeToString(data);
+    } catch (_e) {
+      return '';
+    }
+  }
+
+  private loadWebViewConfig(): void {
+    const text = this.readRawFileText('configuration/webview.json');
+    if (text.length === 0) {
+      return;
+    }
+    try {
+      const parsed = JSON.parse(text) as WebViewJsonConfig;
+      if (parsed.url !== undefined && parsed.url.length > 0) {
+        this.homeUrl = parsed.url;
+      }
+      if (parsed.allowedHosts !== undefined && parsed.allowedHosts.length > 0) {
+        const next: string[] = [];
+        for (let i = 0; i < parsed.allowedHosts.length; i++) {
+          const host = parsed.allowedHosts[i];
+          if (host !== undefined && host.length > 0) {
+            next.push(host.toLowerCase());
+          }
+        }
+        if (next.length > 0) {
+          this.allowedHosts = next;
+        }
+      }
+    } catch (_e) {
+      // keep fallback
+    }
+  }
+
+  private prepareRainbowInjection(): void {
+    const sdk = this.readRawFileText('sdk/web-view-host.min.js');
+    if (sdk.length === 0) {
+      return;
+    }
+    const script: string = `window.__WVH_BOOT__={platform:'harmony'};${sdk}`;
+    const rules: string[] = ['*'];
+    const item: DocumentStartScriptItem = {
+      script: script,
+      scriptRules: rules,
+    };
+    this.documentStartScripts = [item];
+  }
+
+  private isHostAllowed(url: string): boolean {
+    if (url.startsWith('about:') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return true;
+    }
+    let rest = url;
+    const schemeIdx = url.indexOf('://');
+    if (schemeIdx >= 0) {
+      rest = url.substring(schemeIdx + 3);
+    }
+    const slashIdx = rest.indexOf('/');
+    const hostPort = slashIdx >= 0 ? rest.substring(0, slashIdx) : rest;
+    const atIdx = hostPort.lastIndexOf('@');
+    const hostOnly = atIdx >= 0 ? hostPort.substring(atIdx + 1) : hostPort;
+    const colonIdx = hostOnly.indexOf(':');
+    const host = (colonIdx >= 0 ? hostOnly.substring(0, colonIdx) : hostOnly).toLowerCase();
+    if (host.length === 0) {
+      return false;
+    }
+    return this.allowedHosts.indexOf(host) >= 0;
+  }
 
   private startWebView(): void {
     if (this.webStarted) {
@@ -55,7 +153,7 @@ struct Index {
   build() {
     Stack() {
       if (this.webStarted) {
-        Web({ src: WEB_URL, controller: this.controller })
+        Web({ src: this.homeUrl, controller: this.controller })
           .width('100%')
           .height('100%')
           .backgroundColor(Color.Transparent)
@@ -66,7 +164,22 @@ struct Index {
           .onlineImageAccess(true)
           .mixedMode(MixedMode.All)
           .zoomAccess(false)
+          .javaScriptOnDocumentStart(this.documentStartScripts)
+          .javaScriptProxy({
+            object: this.bridge,
+            name: BRIDGE_NAME,
+            methodList: ['postMessage'],
+            controller: this.controller,
+          })
           .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+          .onLoadIntercept((event: OnLoadInterceptEvent) => {
+            const url = event.data.getRequestUrl();
+            // return true to intercept (block); false to allow
+            if (url.length === 0) {
+              return false;
+            }
+            return !this.isHostAllowed(url);
+          })
           .onFirstContentfulPaint((_event: OnFirstContentfulPaintEvent) => {
             // 首份 HTML 已绘制：启动页切到 Loading，继续挡住未完成页面
             this.showLoadingIfNeeded();

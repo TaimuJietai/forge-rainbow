@@ -1,0 +1,5 @@
+{
+  "builtins": ["ready", "config"],
+  "apis": ["ping"],
+  "note": "与 src/api-names.js + Invoke 内置对齐；原生须实现同名 action 并 __callback"
+}

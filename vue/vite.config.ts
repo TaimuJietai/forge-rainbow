@@ -1,10 +1,12 @@
 import fs from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
+import { resolve } from 'node:path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+const root = fileURLToPath(new URL('.', import.meta.url))
 const logoIco = fileURLToPath(new URL('../configuration/logo/logo.ico', import.meta.url))
 
 // https://vite.dev/config/
@@ -15,17 +17,26 @@ export default defineConfig({
     host: true,
     port: 7003,
     allowedHosts: ['dv.phb.plus', '.phb.plus'],
+    // Accessed via https://dv.phb.plus (reverse proxy) → localhost:7003
+    hmr: {
+      host: 'dv.phb.plus',
+      protocol: 'wss',
+      clientPort: 443,
+    },
   },
   build: {
-    // ES modules + crossorigin fail under file:// / resource:// (CORS / null origin).
-    // IIFE + classic <script> works in Android / iOS / OHOS embedded WebViews.
-    cssCodeSplit: false,
+    // 多页面不可再强制单文件 IIFE + inlineDynamicImports。
+    // 远程 https 页使用 ES module；file:// 本地包请走 CDN / 远程 url。
+    cssCodeSplit: true,
     modulePreload: false,
     rollupOptions: {
+      input: {
+        main: resolve(root, 'index.html'),
+        test: resolve(root, 'test.html'),
+      },
       output: {
-        format: 'iife',
-        inlineDynamicImports: true,
         entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
@@ -50,18 +61,13 @@ export default defineConfig({
       },
     },
     {
-      // Only rewrite HTML for native WebView bundles — never in `vite`/`vite preview` HTML.
+      // 去掉 crossorigin，便于部分 WebView；保留 type="module"（MPA 有共享 chunk）
       name: 'native-webview-html',
       apply: 'build',
       transformIndexHtml(html) {
-        return html
-          .replace(/\s+crossorigin(="[^"]*")?/g, '')
-          .replace(/\s+type="module"/g, '')
-          .replace(/<script(\s[^>]*?)?\ssrc=/g, '<script$1 defer src=')
-          .replace(/<script defer defer /g, '<script defer ')
+        return html.replace(/\s+crossorigin(="[^"]*")?/g, '')
       },
     },
-
   ],
   resolve: {
     alias: {
@@ -69,5 +75,3 @@ export default defineConfig({
     },
   },
 })
-
-
